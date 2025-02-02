@@ -8,24 +8,11 @@ import pandas as pd
 
 images = []
 
-def load_data():
-    list_data = os.listdir("data")
-    if len(list_data) > 0:
-        for data in list_data:
-            image = cv2.imread(data)
-            images.append(image)
-        return images
-    else:
-        return []
-
-def preprocess_data():
-    pass
-
 def train_model():
     pass
 
 def main():
-    print(load_data())
+    pass
 
 if __name__ == "__main__":
     main()
