@@ -1,10 +1,7 @@
 import os
 import cv2
-import numpy as np
 import pandas as pd
-
-DATA_RAW_PATH = "data_raw"
-GENDER = ['MALE', 'FEMALE']
+from constants import *
 
 def load_data():
     labels = []

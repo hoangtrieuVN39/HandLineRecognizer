@@ -2,6 +2,7 @@ import unittest
 from data_labeling import *
 import os
 import pandas as pd
+from constants import *
 
 class TestMain(unittest.TestCase):
     def test_label_image_with_curves(self):

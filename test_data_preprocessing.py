@@ -4,6 +4,7 @@ import cv2
 import matplotlib.pyplot as plt
 import os
 import pandas as pd
+from constants import *
 
 class TestMain(unittest.TestCase):
     # def test_load_data(self):
