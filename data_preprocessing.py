@@ -24,7 +24,7 @@ def load_data():
 
 def preprocess_data(data):
     for i in range(len(data)):
-        data.iloc[i, 0] = cv2.resize(data.iloc[i, 0], (224, 224))
+        data.iloc[i, 0] = cv2.resize(data.iloc[i, 0], IMAGE_SIZE)
         data.iloc[i, 0] = cv2.cvtColor(data.iloc[i, 0], cv2.COLOR_BGR2GRAY)
     return data
 
