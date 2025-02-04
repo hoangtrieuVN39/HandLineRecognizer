@@ -40,10 +40,6 @@ def main():
     data = load_data()
     data = preprocess_data(data)
     
-    # Show the first image with click coordinates
-    if not data.empty:
-        show_image_with_click_coordinates(data.iloc[0, 0])
-    
     save_data(data, "data_processed")
 
 if __name__ == "__main__":
