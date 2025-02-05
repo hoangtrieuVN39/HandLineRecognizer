@@ -15,6 +15,9 @@ class TestMain(unittest.TestCase):
         y = []
         model = MobileNetModel(lastFourTrainable=True)
 
+        if os.path.exists("model.keras"):
+            model.load("model.keras")
+
         if os.path.exists("points.csv"):
             df = pd.read_csv("points.csv")
         else:
@@ -26,7 +29,7 @@ class TestMain(unittest.TestCase):
             img = cv2.imread(os.path.join(DATA_PROCESSED_PATH, i))
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             img = cv2.resize(img, IMAGE_SIZE)
-            img = np.stack((img,)*3, axis=-1)  # Convert 2D to 3D by stacking the grayscale image into 3 channels
+            img = np.stack((img,)*3, axis=-1)
             name = i.split(".")[0]
 
             if name in df['name'].values:
@@ -39,6 +42,27 @@ class TestMain(unittest.TestCase):
 
         model.train(x, y)
         model.save("model.keras")
+
+    def test_predict(self):
+        if os.path.exists("points.csv"):
+            df = pd.read_csv("points.csv")
+        else:
+            print("No points.csv file found")
+            return
+        model = MobileNetModel(lastFourTrainable=True)
+        model.load("model.keras")
+        img = cv2.imread(os.path.join(DATA_PROCESSED_PATH, "FEMALE_50.jpg"))
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        img = cv2.resize(img, IMAGE_SIZE)
+        img = np.stack((img,)*3, axis=-1)
+        prediction = model.predict(img.reshape(1, 224, 224, 3))
+        print(prediction)
+        print(df[df['name'] == "FEMALE_50"].iloc[0, 1:].values)
+        for i in range(15):
+            cv2.circle(img, (int(prediction[0, i*2]), int(prediction[0, i*2+1])), 3, (0, 255, 0), -1)
+        cv2.imshow('Image', img)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

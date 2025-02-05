@@ -22,7 +22,8 @@ class MobileNetModel:
             height_shift_range=0.2,
             shear_range=0.2,
             zoom_range=0.2,
-            horizontal_flip=True
+            horizontal_flip=True,
+            vertical_flip=True
         )
 
         self.model.fit(
@@ -47,8 +48,20 @@ class MobileNetModel:
 
         model = Model(inputs=base_model.input, outputs=outputs)
 
-        model.compile(optimizer='adam', loss='mean_squared_error')
+        model.compile(optimizer='adam', loss='mae')
         return model
         
     def save(self, path):
         self.model.save(path)
+
+    def load(self, path):
+        self.model = tf.keras.models.load_model(path)
+
+    def predict(self, x):
+        return self.model.predict(x)
+    
+    def summary(self):
+        return self.model.summary()
+    
+    def evaluate(self, x, y):
+        return self.model.evaluate(x, y)
