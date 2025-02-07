@@ -7,4 +7,5 @@ NUM_KEYPOINTS = 15
 # Paths
 DATA_RAW_PATH = "data_raw"
 DATA_PROCESSED_PATH = "data_processed"
-
+POINTS_PATH = "points.csv"
+MODEL_PATH = "model.keras"
