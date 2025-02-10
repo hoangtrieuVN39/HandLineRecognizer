@@ -27,7 +27,7 @@ def label_image_with_curves(image_path):
             cv2.imshow('Image', image)
 
     cv2.namedWindow('Image', cv2.WINDOW_NORMAL)
-    cv2.resizeWindow('Image', 800, 600)
+    cv2.resizeWindow('Image', 1000, 800)
     cv2.setMouseCallback('Image', click_event)
     cv2.putText(image, name, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
     cv2.imshow('Image', image)
@@ -79,6 +79,8 @@ def main():
     for i in os.listdir(DATA_PROCESSED_PATH):
         if not i.endswith(".jpg"): continue
         name = i.split(".")[0]
+        if name in df['name'].values:
+            continue
 
         result = label_image_with_curves(f"{DATA_PROCESSED_PATH}/{i}")
         if result == 'stop':

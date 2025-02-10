@@ -21,11 +21,6 @@ from constants import *
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-@tf.keras.utils.register_keras_serializable()
-def custom_mse_loss(y_true, y_pred):
-    """Custom MSE loss that gives more weight to keypoint accuracy"""
-    return tf.reduce_mean(tf.square(y_true - y_pred)) * 2.0
-
 class MobileNetModel:
     def __init__(self, lastFourTrainable: bool = False):
         self.model = self.getModel(lastFourTrainable)
@@ -45,22 +40,11 @@ class MobileNetModel:
 
             # Enhanced architecture
             x = base_model.output
-            x = Conv2D(512, (1, 1), activation='relu')(x)
             x = BatchNormalization()(x)
             x = GlobalAveragePooling2D()(x)
-            
-            # First dense block
-            x = Dense(1024, activation='relu')(x)
-            x = BatchNormalization()(x)
+            x = Dense(128, activation='relu')(x)
             x = Dropout(0.3)(x)
-            
-            # Second dense block
-            x = Dense(512, activation='relu')(x)
-            x = BatchNormalization()(x)
-            x = Dropout(0.3)(x)
-            
-            # Final regression layer
-            outputs = Dense(NUM_KEYPOINTS * 2, activation='sigmoid')(x)
+            outputs = Dense(NUM_KEYPOINTS * 2)(x)
 
             model = Model(inputs=base_model.input, outputs=outputs)
             
@@ -79,11 +63,11 @@ class MobileNetModel:
     ) -> tf.keras.callbacks.History:
         try:
             # Normalize labels to [0,1] range
-            y = y / IMAGE_SIZE[0]  # Assuming square image
+            # y = y / IMAGE_SIZE[0]  # Assuming square image
 
-            optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
+            optimizer = tf.keras.optimizers.Adam(learning_rate=1e-2)
             self.model.compile(
-                loss=custom_mse_loss,
+                loss='mae',
                 optimizer=optimizer,
                 metrics=['mse']
             )
@@ -114,13 +98,13 @@ class MobileNetModel:
                 ReduceLROnPlateau(
                     monitor='val_loss',
                     factor=0.2,
-                    patience=5,
+                    patience=10,
                     min_lr=1e-7,
                     verbose=1
                 ),
                 EarlyStopping(
                     monitor='val_loss',
-                    patience=50,
+                    patience=10,
                     restore_best_weights=True,
                     verbose=1
                 ),
@@ -159,7 +143,6 @@ class MobileNetModel:
             # Load model with custom objects
             self.model = tf.keras.models.load_model(
                 path,
-                custom_objects={'custom_mse_loss': custom_mse_loss}
             )
             logger.info(f"Model loaded successfully from {path}")
         except Exception as e:
@@ -242,7 +225,7 @@ def main():
     x, y = load_data()
     logger.info(f"Dataset loaded: {len(x)} samples")
     
-    model.train(x, y, epochs=200, batch_size=32, validation_split=0.2)
+    model.train(x, y, epochs=100, batch_size=32, validation_split=0.2)
     model.save(MODEL_PATH)
 
 if __name__ == "__main__":

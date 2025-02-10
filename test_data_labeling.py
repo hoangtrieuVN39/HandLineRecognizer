@@ -11,7 +11,7 @@ class TestMain(unittest.TestCase):
         print(new_points)
 
     def test_show_points(self):
-        show_points(f"./data_processed/FEMALE_66.jpg")
+        show_points(f"./data_processed/FEMALE_100.jpg")
 
     def test_frame_points(self):
         points = [(158, 180), (146, 163), (136, 149), (120, 135), (101, 122), (108, 95), (116, 108), (129, 123), (144, 135), (165, 145), (115, 91), (125, 106), (141, 118), (161, 124), (182, 121)]
