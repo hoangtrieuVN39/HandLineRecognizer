@@ -218,9 +218,9 @@ def main():
     os.makedirs('checkpoints', exist_ok=True)
     
     model = create_model()
-    if os.path.exists(MODEL_PATH):
-        logger.info("Loading existing model...")
-        model.load(MODEL_PATH)
+    # if os.path.exists(MODEL_PATH):
+    #     logger.info("Loading existing model...")
+    #     model.load(MODEL_PATH)
     
     x, y = load_data()
     logger.info(f"Dataset loaded: {len(x)} samples")
