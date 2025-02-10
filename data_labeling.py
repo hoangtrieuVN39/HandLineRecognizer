@@ -59,15 +59,19 @@ def frame_points(points, name):
     return points_array
 
 def main():
+    list_of_names = []
     if os.path.exists("points.csv"):
         df = pd.read_csv("points.csv")
+        list_of_names = df.iloc[:, 0].tolist()
     else:
         df = pd.DataFrame(columns=HEADER)
     
     for i in os.listdir(DATA_PROCESSED_PATH):
         if not i.endswith(".jpg"): continue
         name = i.split(".")[0]
-
+        
+        if name in list_of_names :
+            continue
         result = label_image_with_curves(f"{DATA_PROCESSED_PATH}/{i}", name)
         if result == 'stop':
             break

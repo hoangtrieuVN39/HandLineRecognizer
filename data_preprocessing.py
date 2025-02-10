@@ -8,7 +8,7 @@ def load_data():
     images = []
     if os.path.exists(DATA_RAW_PATH):
         for g in GENDER:
-            list_data = os.listdir(f"{DATA_RAW_PATH}\{g}")[:50]
+            list_data = os.listdir(f"{DATA_RAW_PATH}\{g}")[:150]
             if len(list_data) > 0:
                 for data in list_data:
                     image_path = os.path.join(f"{DATA_RAW_PATH}\{g}", data)
