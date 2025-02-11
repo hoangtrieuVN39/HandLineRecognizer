@@ -15,7 +15,7 @@ def load_data():
                 image = cv2.imread(image_path)
                 if image is not None:
                     images.append(image)
-                    labels.append(g)
+                    labels.append('MALE')
             else:
                 print(f"Warning: Unable to read image {image_path}")
         return pd.DataFrame({"image": images, "label": labels})
