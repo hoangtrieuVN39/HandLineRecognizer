@@ -108,7 +108,7 @@ class TestModel(unittest.TestCase):
     def test_model_prediction(self):
         """Test model prediction with proper preprocessing and visualization."""
         try:
-            test_image_path = os.path.join(DATA_PROCESSED_PATH, "FEMALE_50.jpg")
+            test_image_path = os.path.join(DATA_PROCESSED_PATH, "FEMALE_56.jpg")
             if not os.path.exists(test_image_path):
                 raise FileNotFoundError(f"Test image not found at {test_image_path}")          
 

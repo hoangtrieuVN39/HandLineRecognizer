@@ -6,10 +6,12 @@ from typing import List, Tuple, Optional, Union
 import pandas as pd
 import tensorflow as tf
 from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input
+from tensorflow.keras.applications import MobileNetV3Large
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import (
     GlobalAveragePooling2D, Dropout, Dense, BatchNormalization, Conv2D
 )
+
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping, ModelCheckpoint
 from sklearn.model_selection import train_test_split
@@ -27,7 +29,7 @@ class MobileNetModel:
     
     def getModel(self, lastFourTrainable: bool = False) -> tf.keras.Model:
         try:
-            base_model = MobileNetV2(
+            base_model = MobileNetV3Large(
                 weights='imagenet',
                 include_top=False,
                 input_shape=(IMAGE_SIZE[0], IMAGE_SIZE[1], 3)
@@ -82,16 +84,16 @@ class MobileNetModel:
             x_train = preprocess_input(x_train)
             x_val = preprocess_input(x_val)
             
-            datagen = ImageDataGenerator(
-                rotation_range=20,
-                width_shift_range=0.2,
-                height_shift_range=0.2,
-                shear_range=0.2,
-                zoom_range=0.2,
-                horizontal_flip=True,
-                brightness_range=[0.8, 1.2],
-                fill_mode='nearest'
-            )
+            # datagen = ImageDataGenerator(
+            #     rotation_range=20,
+            #     width_shift_range=0.2,
+            #     height_shift_range=0.2,
+            #     shear_range=0.2,
+            #     zoom_range=0.2,
+            #     horizontal_flip=True,
+            #     brightness_range=[0.8, 1.2],
+            #     fill_mode='nearest'
+            # )
 
             # Enhanced callbacks
             callbacks = [
@@ -102,16 +104,16 @@ class MobileNetModel:
                     min_lr=1e-7,
                     verbose=1
                 ),
-                EarlyStopping(
-                    monitor='val_loss',
-                    patience=10,
-                    restore_best_weights=True,
-                    verbose=1
-                ),
+                # EarlyStopping(
+                #     monitor='val_loss',
+                #     patience=10,
+                #     restore_best_weights=True,
+                #     verbose=1
+                # ),
             ]
             
             history = self.model.fit(
-                datagen.flow(x_train, y_train, batch_size=batch_size),
+                x_train, y_train,
                 epochs=epochs,
                 validation_data=(x_val, y_val),
                 callbacks=callbacks,
@@ -218,9 +220,9 @@ def main():
     os.makedirs('checkpoints', exist_ok=True)
     
     model = create_model()
-    # if os.path.exists(MODEL_PATH):
-    #     logger.info("Loading existing model...")
-    #     model.load(MODEL_PATH)
+    if os.path.exists(MODEL_PATH):
+        logger.info("Loading existing model...")
+        model.load(MODEL_PATH)
     
     x, y = load_data()
     logger.info(f"Dataset loaded: {len(x)} samples")
