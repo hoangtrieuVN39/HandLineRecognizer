@@ -7,17 +7,17 @@ def load_data():
     labels = []
     images = []
     if os.path.exists(DATA_RAW_PATH):
-        for g in GENDER:
-            list_data = os.listdir(f"{DATA_RAW_PATH}\{g}")[:150]
-            if len(list_data) > 0:
-                for data in list_data:
-                    image_path = os.path.join(f"{DATA_RAW_PATH}\{g}", data)
-                    image = cv2.imread(image_path)
-                    if image is not None:
-                        images.append(image)
-                        labels.append(g)
-                else:
-                    print(f"Warning: Unable to read image {image_path}")
+        # for g in GENDER:
+        list_data = os.listdir(f"{DATA_RAW_PATH}\{'MALE'}")[:100]
+        if len(list_data) > 0:
+            for data in list_data:
+                image_path = os.path.join(f"{DATA_RAW_PATH}\{'MALE'}", data)
+                image = cv2.imread(image_path)
+                if image is not None:
+                    images.append(image)
+                    labels.append(g)
+            else:
+                print(f"Warning: Unable to read image {image_path}")
         return pd.DataFrame({"image": images, "label": labels})
     else:
         return []
